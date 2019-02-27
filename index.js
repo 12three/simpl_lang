@@ -43,6 +43,32 @@ const specialForms = {
         env[args[0].value] = value;
         return value;
     },
+
+    'fun': function (args, env) {
+        if (!args.length) {
+            throw new SyntaxError('Function without body')
+        }
+        function name (expr) {
+            if (expr.type != 'word') {
+                throw new SyntaxError('Argument name error')
+            }
+            return expr.value;
+        }
+        const argNames = args.slice(0, args.length - 1).map(name)
+        const body = args[args.length - 1];
+
+        return function () {
+            if (arguments.length != argNames.length) {
+                throw new TypeError('Wrong args amount');
+            }
+            const localEnv = Object.create(env);
+
+            for (let i = 0; i < arguments.length; i++) {
+                localEnv[argNames[i]] = arguments[i];
+            }
+            return evaluate(body, localEnv);
+        }
+    }
 }
 
 function skipSpace(string) {
@@ -145,13 +171,7 @@ function run() {
 }
 
 run('do(',
-    '   define(total, 0),',
-    '   define(count, 1),',
-    '   while(<(count, 11), do(',
-    '       define(total, +(total, count)),',
-    '       define(count, +(count, 1)),',
-    '       )',
-    '   ),',
-    '   print(total)',
+    '   define( plusOne, fun( a, +(a, 1) ) ),',
+    '   print(plusOne(10))',
     ')'
 )
