@@ -11,4 +11,4 @@ const topEnv = {
     topEnv[op] = new Function('a, b', `return a ${op} b;`);
 })
 
-module.exports = topEnv;
+module.exports = topEnv
