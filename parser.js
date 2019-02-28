@@ -1,10 +1,13 @@
-
-
 function skipSpace(string) {
     const first = string.search(/\S/);
 
     if (first === -1) {
         return '';
+    }
+    if (string[first] === '#') {
+        const lineFinish = string.search(/(\n|$)/)
+
+        return skipSpace(string.slice(lineFinish + 1));
     }
 
     return string.slice(first);
@@ -27,7 +30,7 @@ function parseApply(expr, program) {
 
         expr.args.push(arg.expr);
         program = skipSpace(arg.rest);
-        if (program[0] == ',') {
+        if (program[0] === ',') {
             program = skipSpace(program.slice(1));
         } else if (program[0] !== ')') {
             throw new SyntaxError(`Expected ',' or ')'`)

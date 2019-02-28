@@ -1,5 +1,5 @@
 const topEnv = require('./env');
-const parser = require('./rapser');
+const parser = require('./parser');
 const interpreter = require('./interpreter');
 
 /*
@@ -29,7 +29,24 @@ function run() {
 }
 
 run('do(',
-    '   define( plusOne, fun( a, +(a, 1) ) ),',
-    '   print( plusOne(10) )',
-    ')'
+    '   do(',
+    '      define( sum,',
+    '          fun( array,',
+    '              do(',
+    '                  define(i, 0),',
+    '                  define(sum, 0),',
+    '                  while(  <(i, length(array)),',
+    '                      do(',
+    '                          define( sum, +(sum, element(array, i)) ),',
+    '                          define( i, +(i, 1) ),',
+    '                      ),',
+    '                  ),',
+    '                  sum,',
+    '              ),',
+    '          ),',
+    '      ),',
+    '   ),',
+    '   print( sum( array(1,2,3) ) ),',
+    '   # print( "finish" ),',
+    ')',
 )
